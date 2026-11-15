@@ -13,10 +13,10 @@ CFLAGS = -Wall -O2
 all:  encmars decmars
 
 encmars: $(OBJ_ENC)
-	$(CC) -o encmars  $(LIBS)  $(OBJ_ENC) 
+	$(CC) -o encmars $(OBJ_ENC) $(LIBS) 
 
 decmars: $(OBJ_DEC)
-	$(CC) -o decmars  $(LIBS) $(OBJ_DEC)
+	$(CC) -o decmars $(OBJ_DEC) $(LIBS)
 
 
 mars_enc.o    :def.h globals.h nn_search.h prot.h triangle.h
@@ -29,6 +29,6 @@ mars_dec.o    :def.h globals.h prot.h triangle.h
 nn_search.o   :nn_search.h 
 
 clean:
-	rm -f *.o
+	rm -f *.o encmars decmars
 
 

@@ -10,3 +10,10 @@
 *.lai
 *.la
 *.a
+
+# Built programs and their output
+encmars
+decmars
+*.ifs
+lena.dec.pgm
+quadtree.pgm

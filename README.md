@@ -1,96 +1,63 @@
-Fractal Mars
-============
+<h1 align="center">Fractal Mars</h1>
 
-       /\     Mars --  version 1.0 (10/28/1998)
-      /__\    A quadtree based fractal image coder/decoder  
-     /\  /\   Copyright (C) 1998 Mario Polvere <marpol@iname.com>     
-    /__\/__\  University of Salerno Italy 
+<p align="center">A quadtree fractal image coder and decoder in C, by Mario Polvere (1998).</p>
 
-LICENSE
-=======
+<p align="center">
+  <a href="#quick-start"><b>Quick start</b></a> &nbsp;·&nbsp;
+  <a href="#documents">Documents</a> &nbsp;·&nbsp;
+  <a href="#how-it-works">How it works</a> &nbsp;·&nbsp;
+  <a href="docs/original-README.md">Original README</a>
+</p>
 
-This program is free software; you can redistribute it and/or 
-modify it under the terms of the GNU General Public License as 
-published by the Free Software Foundation; either version 2 
-of the License, or (at your option) any later version.
+<p align="center">
+  <img src="docs/cover.png" alt="The quadtree partition of Lena, and the image decoded from it" width="100%">
+</p>
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Mars is Mario Polvere's program from the University of Salerno for comparing
+ways of speeding up fractal image coding. It stores an image as a set of
+transformations that map larger parts of the image onto smaller ones, and
+rebuilds it by applying them over and over. With its default settings it codes
+the 512×512 greyscale Lena above into 15,814 bytes (16.6:1) at 33.5 dB in
+under half a second. The code is his, under the GPL; this copy only fixes the
+build for current compilers. A Rust rewrite lives on in
+[mars](https://github.com/daleobrien/mars).
 
-You should have received a copy of the GNU General Public 
-License along with this program; if not, write to the Free 
-Software Foundation, Inc., 59 Temple Place - Suite 330, 
-Boston, MA 02111-1307, USA
+## Quick start
 
-GENERAL 
-=======
-This program is aimed to compare several speed-up 
-techniques in fractal image coding. In particular six methods
-have been implemented, chosen from both  classification  and 
-feature vectors approaches. The methods are: Fisher, Hurtgen, 
-MassCenter, Saupe, Saupe-Fisher and MassCenter-Saupe. Please
-refer to the MANUAL for further details. 
-I tried to keep it simple, many solutions have been adopted
-for their simplicity and not because they are the best. 
-Some fragments of code are repeted several times. This is because
-I tried to make the various speed-up methods indipendent each
-other in such a way you can see each method as a plug-in. So
-if you want to try a new method you need just to write the code
-that implement it and to insert it in the coder. In particular
-you need to write only two functions.
+```bash
+make                  # builds encmars and decmars
+./encmars -Q          # lena.raw -> lena.ifs, plus quadtree.pgm
+./decmars             # lena.ifs -> lena.dec.pgm
+./encmars -h          # every option
+```
 
-Other features supported:
-- Entropy based split decision function
-- Variance based split decision function
-- Adaptive splitting thresholds
-- Output quadtree partition in pgm format
-- Iterative decoding
-- Piramidal decoding
-- Fractal zooming
+Input is raw (512×512 by default, set with `-W` and `-H`) or PGM greyscale; see
+[Encoding and decoding](docs/usage.md).
 
+## Documents
 
-INSTALLATION
-============
+| Document | What's in it |
+| -------- | ------------ |
+| [Encoding and decoding](docs/usage.md) | The two programs, the options that matter most, and the output files |
+| [Speed-up methods](docs/methods.md) | The six codebook searches and how they compare on Lena |
+| [MANUAL.txt](MANUAL.txt) | The author's manual: every option, with references |
+| [Original README](docs/original-README.md) | The author's README from 1998: licence, features, known bugs, acknowledgements |
+| [COPYING.txt](COPYING.txt) | The GNU General Public License, version 2 |
 
-On most Unix systems you need just to type 
-"make". You will get two binaries "encmars" and "decmars".
+## How it works
 
-GETTING STARTED
-===============
+The image is split into a quadtree of range blocks, from 16×16 down to 4×4,
+splitting wherever a block can't be matched well enough. Each range block is
+matched against a codebook of domain blocks twice its size, shrunk and turned
+through the eight rotations and flips, and stored as which domain, which
+isometry, and a quantised scale and offset for its brightness. Searching the
+whole codebook is slow, so the coder first narrows it down by classifying
+blocks (Fisher, Hurtgen) or by a nearest-neighbour search over feature vectors
+(Saupe, mass centre). The decoder starts from any image and applies the
+transformations until it settles, either at full size or growing from a small
+image (pyramidal decoding), which also lets it zoom.
+[Speed-up methods](docs/methods.md) has the details.
 
-If you have a 512x512 raw image named
-"lena.raw" in your working directory, you have just to
-type "encmars" and the program will start with its default
-configuration. You can also use an image n pgm format by 
-typing "encmars image.pgm". Please to get a complete list 
-of options type "encmars -h" and "decmars -h". 
+---
 
-KNOWN BUGS
-==========
-
-Strange lines may appear on the decoded image 
-(on the block boundaries) when not power of two zooming 
-factors are used.
-
-
-AUTHOR
-======
-
-Mario Polvere <marpol@iname.com> University of
-Salerno Italy. Comments, suggestions and bugs reports
-are welcome.
-
-
-ACKNOWLEDGEMENTS
-================
-
-I would like to thank Michele Nappi from
-the University of Salerno who introduced me in the fractal
-image coding world and made this work possible. Thanks also
-to Yuval Fisher who wrote enc.c/dec.c from which some ideas
-have been adopted and Matthias Ruhl who wrote frap/defrap 
-from which kd-tree routines have been taken. 
-
-
+<p align="center"><sub>Part of <a href="https://daleobrien.github.io/#engineering">Engineering</a> &nbsp;·&nbsp; more at <a href="https://daleobrien.github.io">daleobrien.github.io</a></sub></p>
