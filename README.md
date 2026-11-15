@@ -60,4 +60,4 @@ image (pyramidal decoding), which also lets it zoom.
 
 ---
 
-<p align="center"><sub>Part of <a href="https://daleobrien.github.io/#engineering">Engineering</a> &nbsp;·&nbsp; more at <a href="https://daleobrien.github.io">daleobrien.github.io</a></sub></p>
+<p align="center"><sub>Part of <a href="https://daleobrien.github.io/#images">Images</a> &nbsp;·&nbsp; more at <a href="https://daleobrien.github.io">daleobrien.github.io</a></sub></p>
